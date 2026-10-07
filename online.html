@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RS FF CLUB Online</title>
+<style>
+:root{--bg:#07111f;--card:#0d1b2d;--card2:#10243a;--text:#f4f8ff;--muted:#9eb0c7;--accent:#28a9ff;--accent2:#6b5cff;--green:#22d69a;--danger:#ff5b6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#173a61 0,#07111f 45%);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+.wrap{max-width:520px;margin:auto;padding:18px 14px 90px}.brand{text-align:center;padding:18px 0 12px}.brand h1{margin:0;font-size:29px;letter-spacing:2px}.brand p{margin:6px 0;color:var(--muted);font-size:12px}
+.card{background:linear-gradient(145deg,var(--card),#091525);border:1px solid #18334f;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 12px 30px #0004}
+.balance{display:flex;justify-content:space-between;align-items:center}.balance strong{font-size:25px;color:var(--green)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.game{padding:16px;border-radius:15px;background:var(--card2);border:1px solid #1a3a58;text-align:left;color:white;font-size:15px;cursor:pointer}
+.game span{display:block;font-size:25px;margin-bottom:8px}.btn{width:100%;border:0;border-radius:12px;padding:13px;font-weight:700;color:white;background:linear-gradient(90deg,var(--accent),var(--accent2));cursor:pointer}.btn.alt{background:#162b42}.btn.green{background:linear-gradient(90deg,#12b981,#20d69a)}.btn.danger{background:linear-gradient(90deg,#e8465b,#ff6677)}
+input,select{width:100%;padding:13px;margin:6px 0;background:#081525;color:white;border:1px solid #21415e;border-radius:11px;outline:none}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#081522ee;border-top:1px solid #1a3853;display:flex;justify-content:center}.tabs button{flex:1;max-width:520px;padding:12px 4px;background:none;border:0;color:#91a5bd;font-size:11px}.tabs button.active{color:#2bb0ff}
+.page{display:none}.page.active{display:block}.row{display:flex;gap:9px}.row>*{flex:1}.small{font-size:12px;color:var(--muted)}.item{padding:12px 0;border-bottom:1px solid #193047}.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#0009;display:flex;align-items:flex-end;justify-content:center;padding:12px}.modalbox{width:100%;max-width:520px;background:#0c1b2c;border:1px solid #244764;border-radius:20px;padding:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><h1>RS FF CLUB</h1><p>PLAY • WIN • ENJOY</p></div>
+
+  <section id="login" class="page active">
+    <div class="card">
+      <h2>Welcome Back 👋</h2>
+      <p class="small">RS FF CLUB Online-এ লগইন করুন</p>
+      <input id="email" type="email" placeholder="Email">
+      <input id="pass" type="password" placeholder="Password">
+      <button class="btn" onclick="login()">Login</button>
+      <p class="small" style="text-align:center">অ্যাকাউন্ট নেই?</p>
+      <button class="btn alt" onclick="register()">Create Account</button>
+      <p id="authMsg" class="small"></p>
+    </div>
+  </section>
+
+  <main id="app" class="hidden">
+    <section id="home" class="page active">
+      <div class="card balance"><div><div class="small">Available Balance</div><strong id="bal">৳ 0.00</strong></div><button class="btn" style="width:auto" onclick="openModal('topup')">+ Topup</button></div>
+      <div class="card"><h3>🎮 Games & Matches</h3><div class="grid">
+        <button class="game" onclick="showGame('Free Fire Match')"><span>🔥</span>Free Fire Match</button>
+        <button class="game" onclick="showGame('Tournament')"><span>🏆</span>Tournament</button>
+        <button class="game" onclick="showGame('Survival Match')"><span>🎯</span>Survival Match</button>
+        <button class="game" onclick="showGame('Esports Pro League')"><span>⚔️</span>Esports Pro League</button>
+        <button class="game" onclick="showGame('Ludo')"><span>🎲</span>Ludo</button>
+        <button class="game" onclick="showGame('Upcoming Matches')"><span>📅</span>Upcoming Matches</button>
+      </div></div>
+      <div class="card"><h3>📢 Notice</h3><p class="small">RS FF CLUB Online-এর প্রথম ওয়েব ভার্সন। ম্যাচ ও পেমেন্ট ফিচার ধাপে ধাপে যুক্ত করা যাবে।</p></div>
+    </section>
+
+    <section id="wallet" class="page">
+      <div class="card"><h2>💰 Wallet</h2><div class="balance"><span class="small">Balance</span><strong id="bal2">৳ 0.00</strong></div><br><div class="row"><button class="btn green" onclick="openModal('topup')">Topup</button><button class="btn danger" onclick="openModal('withdraw')">Withdraw</button></div></div>
+      <div class="card"><h3>📜 Recent Transactions</h3><div id="tx"><p class="small">কোনো transaction নেই।</p></div></div>
+    </section>
+
+    <section id="profile" class="page">
+      <div class="card"><h2>👤 Profile</h2><p id="profileEmail" class="small">Guest</p><input id="name" placeholder="Your name"><button class="btn" onclick="saveProfile()">Save Profile</button></div>
+      <div class="card"><button class="btn alt" onclick="logout()">Logout</button></div>
+    </section>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+ <div class="modalbox">
+  <h3 id="modalTitle"></h3>
+  <div id="modalBody"></div>
+  <button class="btn alt" onclick="closeModal()">Close</button>
+ </div>
+</div>
+
+<nav id="nav" class="tabs hidden">
+<button class="active" onclick="tab('home',this)">🏠<br>Home</button>
+<button onclick="tab('wallet',this)">💰<br>Wallet</button>
+<button onclick="tab('profile',this)">👤<br>Profile</button>
+</nav>
+
+<script>
+let user=JSON.parse(localStorage.getItem('rsff_user')||'null');
+let balance=Number(localStorage.getItem('rsff_balance')||0);
+function boot(){if(user){document.getElementById('login').classList.remove('active');document.getElementById('app').classList.remove('hidden');document.getElementById('nav').classList.remove('hidden');document.getElementById('profileEmail').textContent=user.email;document.getElementById('name').value=user.name||'';updateBal();}}
+function login(){let e=email.value.trim(),p=pass.value;if(!e||!p){authMsg.textContent='Email ও Password দিন।';return}user={email:e,name:''};localStorage.setItem('rsff_user',JSON.stringify(user));boot();}
+function register(){let e=email.value.trim(),p=pass.value;if(!e||!p){authMsg.textContent='Email ও Password দিন।';return}user={email:e,name:''};localStorage.setItem('rsff_user',JSON.stringify(user));boot();}
+function logout(){localStorage.removeItem('rsff_user');location.reload()}
+function tab(id,b){document.querySelectorAll('#app .page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
+function updateBal(){bal.textContent=bal2.textContent='৳ '+balance.toFixed(2)}
+function showGame(n){alert(n+' বিভাগটি প্রস্তুত করা হয়েছে। ম্যাচ/জয়েন সিস্টেম পরের ধাপে backend-এর সাথে যুক্ত হবে।')}
+function openModal(type){let title=type==='topup'?'💎 Topup':'💸 Withdraw';modalTitle.textContent=title;if(type==='topup')modalBody.innerHTML='<select id="method"><option>Nagad</option><option>Upay</option><option>Other</option></select><input id="amount" type="number" placeholder="Amount"><button class="btn green" onclick="fakeTopup()">Submit Topup Request</button>';else modalBody.innerHTML='<input id="wamount" type="number" placeholder="Amount"><input id="waccount" placeholder="Nagad/Upay number"><button class="btn danger" onclick="fakeWithdraw()">Submit Withdraw Request</button>';modal.classList.remove('hidden')}
+function closeModal(){modal.classList.add('hidden')}
+function addTx(t){tx.innerHTML='<div class="item">'+t+'</div>'+tx.innerHTML}
+function fakeTopup(){let a=Number(amount.value);if(a<=0)return alert('সঠিক amount দিন');balance+=a;localStorage.setItem('rsff_balance',balance);updateBal();addTx('Topup request: ৳ '+a.toFixed(2));closeModal()}
+function fakeWithdraw(){let a=Number(wamount.value);if(a<=0||a>balance)return alert('Balance সঠিক নয়');balance-=a;localStorage.setItem('rsff_balance',balance);updateBal();addTx('Withdraw request: ৳ '+a.toFixed(2));closeModal()}
+function saveProfile(){user.name=name.value;localStorage.setItem('rsff_user',JSON.stringify(user));alert('Profile saved')}
+boot();
+</script>
+</body>
+</html>
